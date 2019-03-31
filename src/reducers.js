@@ -20,15 +20,15 @@ export const searchRobots = (state=initialStateSearch, action={}) => {
 
 const initialStateRobots = {
   robots: [],
-  isPending: true
+  isPending: false
 }
 
 export const requestRobots = (state=initialStateRobots, action={}) => {
   switch (action.type) {
     case REQUEST_ROBOTS_PENDING:
-      return Object.assign({}, state, {isPending: true})
+      return { ...state, isPending: true}
     case REQUEST_ROBOTS_SUCCESS:
-      return Object.assign({}, state, {robots: action.payload, isPending: false})
+      return {...state, robots: action.payload, isPending: false}
     case REQUEST_ROBOTS_FAILED:
       return Object.assign({}, state, {error: action.payload})
     default:

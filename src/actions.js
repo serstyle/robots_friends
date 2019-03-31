@@ -8,9 +8,28 @@ import {
 
 export const setSearchField = (text) => ({ type: CHANGE_SEARCHFIELD, payload: text })
 
-export const requestRobots = (dispatch) => {
-  dispatch({ type: REQUEST_ROBOTS_PENDING })
-  apiCall('https://jsonplaceholder.typicode.com/users')
-    .then(data => dispatch({ type: REQUEST_ROBOTS_SUCCESS, payload: data }))
-    .catch(error => dispatch({ type: REQUEST_ROBOTS_FAILED, payload: error }))
+const requestRobotsPending = () =>{
+	return{type: REQUEST_ROBOTS_PENDING}
+}
+
+const requestRobotsFailed = (err) =>{
+	return{
+		type: REQUEST_ROBOTS_FAILED,
+		payload: err
+	}
+}
+
+const requestRobotsSuccess = (payload) =>{
+	return{
+		type: REQUEST_ROBOTS_SUCCESS,
+		payload
+	}
+}
+
+export const requestRobots = () => (dispatch) => {
+  dispatch(requestRobotsPending())
+  return apiCall('https://jsonplaceholder.typicode.com/users')
+    .then(payload =>{console.log(payload) 
+    	dispatch(requestRobotsSuccess(payload))})
+    .catch(error => dispatch(requestRobotsFailed(error)))
 }
