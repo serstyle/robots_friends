@@ -1,20 +1,33 @@
 version: 2
 jobs:
-  bobby:
-    docker: # use the docker executor type; machine and macos executors are also supported
-      - image: circleci/node:4.8.2 # the primary container, where your job's commands are run
+  build:
+    docker:
+      - image: circleci/node:10.15.3 
     steps:
-      - checkout # check out the code in the project directory
-      - run: echo "hello world" # run the `echo` command
-  sally:
-    docker: # use the docker executor type; machine and macos executors are also supported
-      - image: circleci/node:4.8.2 # the primary container, where your job's commands are run
+      - checkout
+      - run: echo "installing"
+      - run: npm install
+      - run: npm run build
+  test:
+    docker:
+      - image: circleci/node:10.15.3
     steps:
-      - checkout # check out the code in the project directory
-      - run: echo "double check" # run the `echo` command
+      - checkout
+      - run: echo "test"
+      - run: npm install
+      - run: npm test
+  try:
+    docker:
+      - image: circleci/node:10.15.3
+    steps:
+      - checkout
+      - run: echo "try"
 workflows:
   version: 2
-  bobby_sally:
+  build_test_lint:
     jobs:
-      - bobby
-      - sally
+      - build
+      - try
+      - test:
+        requires:
+          - try
